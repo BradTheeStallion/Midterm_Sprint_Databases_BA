@@ -1,95 +1,49 @@
 # Movie Rental System
 
-## Overview
-This CLI application serves as a management tool for a movie rental system. It allows users to interact with a PostgreSQL database containing information about movies, customers, and movie rentals
+This repository was generated from https://github.com/menglishca/database-midterm-base
 
-## Features
-- Create database tables for movies, customers, and rentals if they don't already exist
-- Insert new movies into the database.
-- Update a customer's email address.
-- Remove a customer and their rental history.
-- Display all movies in the database.
+The project uses JavaScript and PostgreSQL to create a simple movie rental database with a functioning CLI. I chose to use inquirer.js (https://www.npmjs.com/package/inquirer) to make the CLI efficient and user friendly.
 
-## Prerequisites
-Before running this application, ensure you have the following installed:
-- Node.js (v22 is recommended)
-- PostgreSQL server running
+Here is an example of the .env file to get the program running (you will need to fill in your own values):
 
+PG_USER=postgres
+PG_HOST=localhost
+PG_DATABASE=postgres
+PG_PASSWORD=password
+PG_PORT=port
 
-## How to Use this Template
+If you have any difficulty with the .env, don't hesitate to reach out to me.
 
-This repository is set up as a **GitHub template** to help you quickly create your own version of the **Movie Rental System**.
+Once you have your .env set up, run the command:
 
-### Steps to Create Your Own Repository
-
-1. **Click the "Use this template" button** at the top of this page on GitHub.
-   
-1. **Name your new repository** and choose its visibility (public or private).
-
-1. Once your repository is created, **clone your new repo** to your local machine:
-    ```bash
-    git clone <your-new-repo-url>
-    ```
-
-1. Navigate into the project directory and install the necessary dependencies:
-    ```bash
-    cd <your-new-repo-name>
-    npm install
-    ```
-  
-1. **Run the app:**
-    ```bash
-    node index.js
-    ```
-
-By using this template, you'll have the project structure and initial setup ready to go, so you can focus on building the functionality!
-
-
-## Usage
-Run the application with the following commands:
-
-### Insert a Movie
-To insert a new movie, use:
-```bash
-node index.js insert "<title>" <year> "<genre>" "<director>"
-```
-Example:
-```bash
-node index.js insert "Inception" 2010 "Science Fiction" "Christopher Nolan"
-```
-
-### Show All Movies
-To display all movies in the database, use:
-```bash
-node index.js show
-```
-
-### Update Customer Email
-To update a customer's email address, use:
-```bash
-node index.js update <customer_id> "<new_email>"
-```
-Example:
-```bash
-node index.js update 1 "newemail@example.com"
-```
-
-### Remove a Customer
-To remove a customer from the database, use:
-```bash
-node index.js remove <customer_id>
-```
-Example:
-```bash
-node index.js remove 1
-```
-
-### Help Command
-To view all available commands, use:
-```bash
 node index.js
-```
 
-## Notes
-- Make sure your PostgreSQL server is running and that you have created a database for the application to connect to.
-- Modify the database connection details in the code to match your PostgreSQL setup.
+And you should be greeted with the following:
+
+<img width="333" alt="Screenshot 2024-11-03 at 4 10 00 PM" src="https://github.com/user-attachments/assets/2add7707-d34a-4615-a357-1664079ee7dc">
+
+A part of the assignment was to outline how each of the tables are in 3NF, so I will do so here.
+
+In order for a table to be 3NF, we first must demonstrate that 1NF (all fields are atomic(no multi-valued fields)) and 2NF (there is only 1 primary key and all other fields depend on it) are true.
+
+# Movies Table:
+
+1NF: All fields are atomic.
+2NF: The primary key is movie_id, and all other attributes depend on it.
+3NF: There are no non-key attributes that depend on other non-key attributes (e.g., release_year, genre, and director_name do not depend on each other). 
+
+# Customers Table:
+
+1NF: All fields are atomic.
+2NF: The primary key is customer_id, and all other attributes depend on it.
+3NF: There are no transitive dependencies among the non-key attributes.
+
+# Rentals Table:
+
+1NF: All fields are atomic.
+2NF: The primary key is rental_id, and all other attributes depend on it. The customer_id and movie_id attributes are foreign keys and help establish relationships but do not create partial dependencies.
+3NF: There are no transitive dependencies among the non-key attributes. The rental_date and return_date depend only on the primary key and not on other non-key attributes.
+
+Thank you for your interest in my project! Don't hesitate to reach out.
+
+Here is a link to the project template's readme: https://github.com/menglishca/database-midterm-base/blob/main/README.md
