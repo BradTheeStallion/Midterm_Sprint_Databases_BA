@@ -1,6 +1,18 @@
+//Brad Ayers
+//Midterm Sprint
+//November 3, 2024
+
 const { Pool } = require('pg');
 
-
+// PostgreSQL connection
+//I wasn't comfortable sharing my database credentials, so I have added the environment variables in the .env file. Please refer to the Readme doc if you want to run this code.
+const pool = new Pool({
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
+  port: process.env.PG_PORT,
+});
 
 /**
  * Creates the database tables, if they do not already exist.
