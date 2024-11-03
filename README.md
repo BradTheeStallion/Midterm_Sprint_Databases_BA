@@ -29,19 +29,25 @@ In order for a table to be 3NF, we first must demonstrate that 1NF (all fields a
 # Movies Table:
 
 1NF: All fields are atomic.
+
 2NF: The primary key is movie_id, and all other attributes depend on it.
+
 3NF: There are no non-key attributes that depend on other non-key attributes (e.g., release_year, genre, and director_name do not depend on each other). 
 
 # Customers Table:
 
 1NF: All fields are atomic.
+
 2NF: The primary key is customer_id, and all other attributes depend on it.
+
 3NF: There are no transitive dependencies among the non-key attributes.
 
 # Rentals Table:
 
 1NF: All fields are atomic.
+
 2NF: The primary key is rental_id, and all other attributes depend on it. The customer_id and movie_id attributes are foreign keys and help establish relationships but do not create partial dependencies.
+
 3NF: There are no transitive dependencies among the non-key attributes. The rental_date and return_date depend only on the primary key and not on other non-key attributes.
 
 Thank you for your interest in my project! Don't hesitate to reach out.
