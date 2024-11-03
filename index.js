@@ -1,61 +1,103 @@
 const { Pool } = require('pg');
 
-// PostgreSQL connection
-const pool = new Pool({
-  user: 'postgres', //This _should_ be your username, as it's the default one Postgres uses
-  host: 'localhost',
-  database: 'your_database_name', //This should be changed to reflect your actual database
-  password: 'your_database_password', //This should be changed to reflect the password you used when setting up Postgres
-  port: 5432,
-});
+
 
 /**
  * Creates the database tables, if they do not already exist.
  */
 async function createTable() {
-  // TODO: Add code to create Movies, Customers, and Rentals tables
-};
+  const createTablesQuery = `
+    CREATE TABLE IF NOT EXISTS Movies (
+      movie_id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      release_year INTEGER NOT NULL,
+      genre VARCHAR(100) NOT NULL,
+      director_name VARCHAR(255) NOT NULL
+    );
+    
+    CREATE TABLE IF NOT EXISTS Customers (
+      customer_id SERIAL PRIMARY KEY,
+      first_name VARCHAR(100) NOT NULL,
+      last_name VARCHAR(100) NOT NULL,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      phone VARCHAR(20)
+    );
+    
+    CREATE TABLE IF NOT EXISTS Rentals (
+      rental_id SERIAL PRIMARY KEY,
+      customer_id INTEGER NOT NULL REFERENCES Customers(customer_id),
+      movie_id INTEGER NOT NULL REFERENCES Movies(movie_id),
+      rental_date DATE NOT NULL,
+      return_date DATE NOT NULL
+    );
+  `;
+  await pool.query(createTablesQuery);
+  console.log("Tables created successfully or already exist.");
+}
 
 /**
  * Inserts a new movie into the Movies table.
- * 
- * @param {string} title Title of the movie
- * @param {number} year Year the movie was released
- * @param {string} genre Genre of the movie
- * @param {string} director Director of the movie
  */
 async function insertMovie(title, year, genre, director) {
-  // TODO: Add code to insert a new movie into the Movies table
-};
+  const insertMovieQuery = `
+    INSERT INTO Movies (title, release_year, genre, director_name) 
+    VALUES ($1, $2, $3, $4)
+  `;
+  await pool.query(insertMovieQuery, [title, year, genre, director]);
+  console.log(`Movie "${title}" added to the database.`);
+}
 
 /**
- * Prints all movies in the database to the console
+ * Prints all movies in the database to the console.
  */
 async function displayMovies() {
-  // TODO: Add code to retrieve and print all movies from the Movies table
-};
+  const getAllMoviesQuery = `
+    SELECT movie_id, title, release_year, genre, director_name FROM Movies
+  `;
+  const res = await pool.query(getAllMoviesQuery);
+  console.log("Movies in the database:");
+  res.rows.forEach((movie) => {
+    console.log(`ID: ${movie.movie_id}, Title: ${movie.title}, Year: ${movie.release_year}, Genre: ${movie.genre}, Director: ${movie.director_name}`);
+  });
+}
 
 /**
  * Updates a customer's email address.
- * 
- * @param {number} customerId ID of the customer
- * @param {string} newEmail New email address of the customer
  */
 async function updateCustomerEmail(customerId, newEmail) {
-  // TODO: Add code to update a customer's email address
-};
+  const updateEmailQuery = `
+    UPDATE Customers SET email = $1 WHERE customer_id = $2
+  `;
+  const res = await pool.query(updateEmailQuery, [newEmail, customerId]);
+  if (res.rowCount > 0) {
+    console.log(`Customer ID ${customerId}'s email updated to ${newEmail}`);
+  } else {
+    console.log(`Customer ID ${customerId} not found.`);
+  }
+}
 
 /**
  * Removes a customer from the database along with their rental history.
- * 
- * @param {number} customerId ID of the customer to remove
  */
 async function removeCustomer(customerId) {
-  // TODO: Add code to remove a customer and their rental history
-};
+  const deleteRentalsQuery = `
+    DELETE FROM Rentals WHERE customer_id = $1
+  `;
+  await pool.query(deleteRentalsQuery, [customerId]);
+
+  const deleteCustomerQuery = `
+    DELETE FROM Customers WHERE customer_id = $1
+  `;
+  const res = await pool.query(deleteCustomerQuery, [customerId]);
+  if (res.rowCount > 0) {
+    console.log(`Customer ID ${customerId} and their rental history have been removed.`);
+  } else {
+    console.log(`Customer ID ${customerId} not found.`);
+  }
+}
 
 /**
- * Prints a help message to the console
+ * Prints a help message to the console.
  */
 function printHelp() {
   console.log('Usage:');
@@ -66,7 +108,7 @@ function printHelp() {
 }
 
 /**
- * Runs our CLI app to manage the movie rentals database
+ * Runs our CLI app to manage the movie rentals database.
  */
 async function runCLI() {
   await createTable();
@@ -101,6 +143,9 @@ async function runCLI() {
       printHelp();
       break;
   }
-};
+
+  // Close the pool
+  await pool.end();
+}
 
 runCLI();
