@@ -2,6 +2,7 @@
 -- Midterm Sprint
 -- November 3, 2024
 
+-- Create tables
 CREATE TABLE Movies (
     movie_id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -28,6 +29,7 @@ CREATE TABLE Rentals (
     FOREIGN KEY (movie_id) REFERENCES Movies(movie_id)
 );
 
+-- Insert data
 INSERT INTO Movies (title, release_year, genre, director_name) VALUES
     ('The Shining', 1980, 'Horror', 'Stanley Kubrick'),
     ('Hereditary', 2018, 'Horror', 'Ari Aster'),
@@ -36,7 +38,7 @@ INSERT INTO Movies (title, release_year, genre, director_name) VALUES
     ('The Exorcist', 1973, 'Horror', 'William Friedkin');
 
 INSERT INTO Customers (first_name, last_name, email, phone) VALUES
-    ('Kyle', 'Hollett', 'kyle.hollett@keyin.com', '1-709-555-0123'),
+    ('Lyle', 'Follett', 'kyle.hollett@keyin.com', '1-709-555-0123'),
     ('Brian', 'Janes', 'brian.janes@keyin.com', '1-709-555-0124'),
     ('Adam', 'Stevenson', 'adam.stevenson@keyin.com', '1-709-555-0125'),
     ('Bran', 'Muffin', 'brandon.shea@keyin.com', '1-709-555-0126'),
@@ -53,3 +55,40 @@ INSERT INTO Rentals (customer_id, movie_id, rental_date, return_date) VALUES
     (4, 3, '2024-10-28', '2024-10-31'),
     (5, 4, '2024-10-29', '2024-11-01'),
     (5, 2, '2024-11-02', '2024-11-05');
+
+-- Requested queries
+-- List all rentals for a specific customer
+SELECT m.title, m.release_year, m.genre, m.director_name, r.rental_date, r.return_date
+FROM Rentals r
+JOIN Movies m ON r.movie_id = m.movie_id
+JOIN Customers c ON r.customer_id = c.customer_id
+WHERE c.email = 'adam.stevenson@keyin.com';
+
+-- List all rentals for a specific movie
+SELECT c.first_name, c.last_name, c.email, c.phone, r.rental_date, r.return_date
+FROM Rentals r
+JOIN Customers c ON r.customer_id = c.customer_id
+JOIN Movies m ON r.movie_id = m.movie_id
+WHERE m.title = 'Get Out';
+
+-- Rental history for a specific movie
+SELECT c.first_name, c.last_name, c.email, r.rental_date, r.return_date
+FROM Rentals r
+JOIN Customers c ON r.customer_id = c.customer_id
+JOIN Movies m ON r.movie_id = m.movie_id
+WHERE m.title = 'Hereditary'
+ORDER BY r.rental_date;
+
+-- List all rentals for a specific director
+SELECT c.first_name, c.last_name, m.title, r.rental_date
+FROM Rentals r
+JOIN Movies m ON r.movie_id = m.movie_id
+JOIN Customers c ON r.customer_id = c.customer_id
+WHERE m.director_name = 'Wes Craven';
+
+-- List all rentals that are currently rented
+SELECT m.title, c.first_name, c.last_name, r.rental_date, r.return_date
+FROM Rentals r
+JOIN Movies m ON r.movie_id = m.movie_id
+JOIN Customers c ON r.customer_id = c.customer_id
+WHERE r.return_date > CURRENT_DATE;
