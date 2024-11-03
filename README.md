@@ -22,11 +22,13 @@ And you should be greeted with the following:
 
 <img width="333" alt="Screenshot 2024-11-03 at 4 10 00 PM" src="https://github.com/user-attachments/assets/2add7707-d34a-4615-a357-1664079ee7dc">
 
+# 3NF
+
 A part of the assignment was to outline how each of the tables are in 3NF, so I will do so here.
 
 In order for a table to be 3NF, we first must demonstrate that 1NF (all fields are atomic(no multi-valued fields)) and 2NF (there is only 1 primary key and all other fields depend on it) are true.
 
-# Movies Table:
+**Movies Table:**
 
 1NF: All fields are atomic.
 
@@ -34,7 +36,7 @@ In order for a table to be 3NF, we first must demonstrate that 1NF (all fields a
 
 3NF: There are no non-key attributes that depend on other non-key attributes (e.g., release_year, genre, and director_name do not depend on each other). 
 
-# Customers Table:
+**Customers Table:**
 
 1NF: All fields are atomic.
 
@@ -42,7 +44,7 @@ In order for a table to be 3NF, we first must demonstrate that 1NF (all fields a
 
 3NF: There are no transitive dependencies among the non-key attributes.
 
-# Rentals Table:
+**Rentals Table:**
 
 1NF: All fields are atomic.
 
